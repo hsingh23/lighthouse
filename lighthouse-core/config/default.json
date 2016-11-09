@@ -85,7 +85,8 @@
     "dobetterweb/no-old-flexbox",
     "dobetterweb/no-websql",
     "dobetterweb/uses-http2",
-    "dobetterweb/uses-passive-event-listeners"
+    "dobetterweb/uses-passive-event-listeners",
+    "dobetterweb/uses-single-use-event-listeners"
   ],
 
   "aggregations": [{

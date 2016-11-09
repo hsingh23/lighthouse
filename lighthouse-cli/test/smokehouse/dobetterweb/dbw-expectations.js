@@ -36,7 +36,8 @@ module.exports = [
       'no-mutation-events': false,
       'no-old-flexbox': false,
       'no-websql': false,
-      'uses-passive-event-listeners': false
+      'uses-passive-event-listeners': false,
+      'uses-single-use-event-listeners': false
     }
   }, {
     initialUrl: 'http://localhost:10200/online-only.html',
@@ -54,7 +55,8 @@ module.exports = [
       'no-mutation-events': true,
       'no-old-flexbox': true,
       'no-websql': true,
-      'uses-passive-event-listeners': true
+      'uses-passive-event-listeners': true,
+      'uses-single-use-event-listeners': true
     }
   }
 ];

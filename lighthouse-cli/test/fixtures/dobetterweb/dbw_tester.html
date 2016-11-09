@@ -209,6 +209,23 @@ function passiveEventsListenerTest() {
   });
 }
 
+function singleUseEventListenerTest() {
+  // FAIL
+  window.addEventListener('click', function clickListener(e) {
+    this.removeEventListener('click', clickListener);
+  });
+
+  // PASS - uses single use events.
+  document.addEventListener('click', function(e) {
+    // noop
+  }, {once: true});
+
+  // FAIL - uses {once: false}
+  document.body.addEventListener('click', function(e) {
+    // noop
+  }, {once: false});
+}
+
 function geolocationOnStartTest() {
   navigator.geolocation.getCurrentPosition(function(position) {
     // noop
@@ -240,6 +257,7 @@ if (location.search === '') {
   websqlTest();
   mutationEvenTest();
   passiveEventsListenerTest();
+  singleUseEventListenerTest();
   geolocationOnStartTest();
   linksBlockingFirstPaintTest();
   noRelOpenLinksTest();
@@ -262,6 +280,9 @@ if (location.search === '') {
   }
   if (params.has('passiveEvents')) {
     passiveEventsListenerTest();
+  }
+  if (params.has('singleuseEvents')) {
+    singleUseEventListenerTest();
   }
   if (params.has('geolocation')) {
     geolocationOnStartTest();
