@@ -59,7 +59,8 @@ class SingleUseEventsAudit extends Audit {
     const listeners = artifacts.EventListeners;
     const pageHost = url.parse(artifacts.URL.finalUrl).host;
 
-    // Note: EventListener.once landed in Chrome 56. Give up if we don't have it.'
+    // Note: EventListener.once landed in Chrome 56. Give up if we don't have it.
+    // https://codereview.chromium.org/2490303003
     if (listeners.length && !('once' in listeners[0])) {
       return SingleUseEventsAudit.generateAuditResult({
         rawValue: -1,
