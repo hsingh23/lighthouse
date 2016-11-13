@@ -215,15 +215,17 @@ function singleUseEventListenerTest() {
     this.removeEventListener('click', clickListener);
   });
 
+  // FAIL - uses {once: false}
+  document.body.addEventListener('click', function clickListener2(e) {
+    console.log('single-use event listener');
+
+    this.removeEventListener('click', clickListener2);
+  }, {once: false});
+
   // PASS - uses single use events.
   document.addEventListener('click', function(e) {
     // noop
   }, {once: true});
-
-  // FAIL - uses {once: false}
-  document.body.addEventListener('click', function(e) {
-    // noop
-  }, {once: false});
 }
 
 function geolocationOnStartTest() {

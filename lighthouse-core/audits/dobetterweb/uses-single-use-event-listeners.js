@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Audit a page to see if it is using single-use event listeners
+ * @fileoverview Audit a page to see if it's using single-use event listeners
  * where appropriate.
  */
 
@@ -34,11 +34,10 @@ class SingleUseEventsAudit extends Audit {
   static get meta() {
     return {
       category: 'JavaScript',
-      name: 'single-use-event-listeners',
-      description: 'Site is using single-use events listeners (at the page level) ' +
-                   'when it can',
-      helpText: '<a href="https://www.chromestatus.com/feature/5630331130478592" target="_blank">Single-use event listeners</a> remove the need to call <code>removeEventListener</code> in an event listener\'s callback. Their callback is only invoked once: <code>addEventListener(\'click\', ..., {once: true})</code>.',
-      requiredArtifacts: ['URL', 'PageLevelEventListeners']
+      name: 'uses-single-use-event-listeners',
+      description: 'Site uses single-use events listeners where it can',
+      helpText: '<a href="https://www.chromestatus.com/feature/5630331130478592" target="_blank">Single-use event listeners</a> removes the need to call <code>removeEventListener</code> in your event handler callback. Instead, the callback is only invoked once: <code>addEventListener(\'click\', ..., {once: true})</code>.',
+      requiredArtifacts: ['URL', 'EventListeners']
     };
   }
 
@@ -47,30 +46,38 @@ class SingleUseEventsAudit extends Audit {
    * @return {!AuditResult}
    */
   static audit(artifacts) {
-    if (typeof artifacts.PageLevelEventListeners === 'undefined' ||
-        artifacts.PageLevelEventListeners === -1) {
+    if (typeof artifacts.EventListeners === 'undefined' ||
+        artifacts.EventListeners === -1) {
       return SingleUseEventsAudit.generateAuditResult({
         rawValue: -1,
-        debugString: 'PageLevelEventListeners gatherer did not run'
+        debugString: 'EventListeners gatherer did not run'
       });
-    } else if (artifacts.PageLevelEventListeners.rawValue === -1) {
-      return SingleUseEventsAudit.generateAuditResult(artifacts.PageLevelEventListeners);
+    } else if (artifacts.EventListeners.rawValue === -1) {
+      return SingleUseEventsAudit.generateAuditResult(artifacts.EventListeners);
     }
 
-    const listeners = artifacts.PageLevelEventListeners;
+    const listeners = artifacts.EventListeners;
     const pageHost = url.parse(artifacts.URL.finalUrl).host;
+
+    // Note: EventListener.once landed in Chrome 56. Give up if we don't have it.'
+    if (listeners.length && !('once' in listeners[0])) {
+      return SingleUseEventsAudit.generateAuditResult({
+        rawValue: -1,
+        debugString: 'This audit requires Chrome 56+'
+      });
+    }
 
     // Filter out event listeners that should be single-use.
     const results = listeners.filter(loc => {
       const removesOwnListener = loc.handler.description.match(
-            /\.removeEventListener\(\s*\)/g);
+          /\.removeEventListener\(/g);
       const sameHost = loc.url ? url.parse(loc.url).host === pageHost : true;
-      return sameHost && removesOwnListener;
+      return sameHost && removesOwnListener && !loc.once;
     }).map(loc => {
       const handler = loc.handler ? loc.handler.description : '...';
       return Object.assign({
         label: `line: ${loc.line}, col: ${loc.col}`,
-        code: `${loc.objectId}.addEventListener('${loc.type}', ${handler})`
+        code: `${loc.objectName}.addEventListener('${loc.type}', ${handler})`
       }, loc);
     });
 
