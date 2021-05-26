@@ -56,7 +56,7 @@
     "rimraf": "^2.2.8",
     "semver": ">=4.3.3",
     "speedline": "1.0.3",
-    "ws": "^1.1.1",
+    "ws": "^7.4.6",
     "yargs": "3.30.0"
   },
   "repository": "googlechrome/lighthouse",
