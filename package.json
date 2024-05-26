@@ -53,7 +53,7 @@
     "json-stringify-safe": "^5.0.1",
     "jszip": "2.6.0",
     "mkdirp": "^0.5.1",
-    "rimraf": "^2.2.8",
+    "rimraf": "^4.3.1",
     "semver": ">=4.3.3",
     "speedline": "1.0.3",
     "ws": "^1.1.1",
