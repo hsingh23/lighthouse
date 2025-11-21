@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "axe-core": "^1.1.1",
-    "chrome-devtools-frontend": "1.0.422034",
+    "chrome-devtools-frontend": "1.0.1510180",
     "debug": "^2.2.0",
     "devtools-timeline-model": "1.1.6",
     "gl-matrix": "2.3.2",
